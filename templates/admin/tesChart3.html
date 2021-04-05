@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Django Highcharts Example</title>
+</head>
+<body>
+  <div id="container"></div>
+  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <script>
+    Highcharts.chart('container', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: '2020工单趋势-按月份'
+        },
+        xAxis: {
+            categories: {{ month | safe }}
+        },
+        series: [{
+            name: 'dept1',
+            data: {{ dept1 }}
+        }, {
+            name: 'dept2',
+            data: {{ dept2 }}
+        }, {
+            name: 'dept3',
+            data: {{ dept3 }}
+        }
+        ]
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+{% extends 'admin/base_site.html' %}
+
+ {% block extrahead %}
+{#<script type="text/javascript" src="/admin/jsi18n/"></script>#}
+{#<script type="text/javascript" src="/admin-media/js/core.js"></script>#}
+ <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css">
+
+ {% endblock %}
+
+
+{% block content_title %}
+{#    <h1> Get Bitcon Price </h1>#}
+{% endblock %}
+
+{% block content %}
+
+    <div >
+        <form action="/search/" method="get">
+            <fieldset class="module aligned ">
+                <h2>个人信息</h2>
+                <div class="form-row">
+                    <label for="id_first_name">名字:</label>
+                   <input type="text" name="q" class="vTextField" maxlength="150" id="id_first_name">
+                </div>
+                 <div class="form-row">
+                    <label for="id_last_name">姓氏:</label>
+                    <input type="text" name="last_name" class="vTextField" maxlength="150" id="id_last_name">
+                </div>
+                <div class="form-row">
+                    <label for="id_email">电子邮件地址:</label>
+                        <input type="email" name="email" value="szwnba@qq.com" class="vTextField" maxlength="254" id="id_email">
+                </div>
+                <div class="submit-row">
+                    <button type="button" class="el-button el-button--primary el-button--small" data-name="add_item" url="/app/money/add/">
+                        <!----><i class="el-icon-plus"></i>
+                        <span>增加</span>
+                    </button>
+                     <button type="button" class="el-button stop-submit el-button--danger el-button--small" data-name="delete_selected">
+                         <!----><i class="el-icon-delete"></i>
+                         <span>删除</span>
+                     </button>
+                    <input type="submit" value="保存并增加另一个" name="_addanother" class="el-button el-button--primary el-button--small">
+                    <input type="submit" value="保存并继续编辑" name="_continue" class="el-button el-button--primary el-button--small">
+                    <input type="submit" value="保存" name="_save" class="el-button el-button--primary el-button--small">
+                </div>
+            </fieldset>
+
+        </form>
+    </div>
+    <!-- Content -->
+    <div >
+        <form action="/search-post/" method="post" id="money_form" novalidate="">
+            {% csrf_token %}
+            <input type="hidden" name="csrfmiddlewaretoken" value="LNYDL00HHP59DMfQMdhdJwFfaCgyyIaUH40NihqBOTH6NWeVl5HOw7fZBM4yu2E1">
+            <div>
+             <fieldset class="module aligned ">
+                <h2>个人信息</h2>
+                <div class="form-row field-name">
+                    <div>
+                        <label class="required" for="id_name">收支项:</label>
+                            <input type="text" name="name" class="vTextField" maxlength="128" required="" id="id_name">
+                        <div class="help">每一笔款项描述</div>
+                    </div>
+                </div>
+                <div class="form-row field-salary">
+                    <div>
+                        <label class="required" for="id_salary">金额:</label>
+                            <input type="number" name="salary" class="vBigIntegerField" min="-9223372036854775808" max="9223372036854775807" required="" id="id_salary">
+                    </div>
+                </div>
+                <div class="form-row field-pay">
+                    <div>
+                        <label class="required" for="id_pay">金额:</label>
+                            <input type="number" name="pay" class="vBigIntegerField" min="-9223372036854775808" max="9223372036854775807" required="" id="id_pay">
+                    </div>
+                </div>
+                <div class="form-row field-cost">
+                    <div>
+                        <label class="required" for="id_cost">金额:</label>
+                            <input type="number" name="cost" class="vBigIntegerField" min="-9223372036854775808" max="9223372036854775807" required="" id="id_cost">
+                    </div>
+                </div>
+            </fieldset>
+                <div class="submit-row">
+                    <button type="button" class="el-button el-button--button el-button--small" onclick="prev()" style="float: left; margin-right: 10px; margin-bottom: 10px;">
+                        <!----><i class="el-icon-arrow-left"></i>
+                        <span><span>返回</span></span>
+                    </button>
+                    <input type="submit" value="保存并增加另一个" name="_addanother" class="el-button el-button--primary el-button--small">
+                    <input type="submit" value="保存并继续编辑" name="_continue" class="el-button el-button--primary el-button--small">
+                    <input type="submit" value="保存" name="_save" class="el-button el-button--primary el-button--small">
+                    <input type="hidden" name="actionName" value="actionValue" id="actionName">
+                </div>
+            </div>
+        </form>
+    </div>
+
+{##}
+{#    <form action="/search/" method="get">#}
+{#        <input type="text" name="q">#}
+{#        <input type="submit" value="search" name="_save" class="el-button el-button--primary el-button--small">#}
+{#    </form>#}
+{##}
+{#    <br/>#}
+{#    <form action="/search-post/" method="post">#}
+{#            {% csrf_token %}#}
+{#            <input type="text" name="q">#}
+{#            <input type="submit" value="search-post" name="_save" class="el-button el-button--primary el-button--small">#}
+{#    </form>#}
+
+ <p>{{ rlt }}</p>
+
+{% endblock %}
