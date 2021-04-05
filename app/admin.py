@@ -1,12 +1,85 @@
+from datetime import datetime
+
 from django.contrib import admin, messages
+from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from django.db import transaction
 from django.http import JsonResponse
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from import_export.admin import ImportExportActionModelAdmin
 
-from app.models import TestControl, TestChart1, TestChart2, Money, ChartByModel, ChartBySql
+from app.GetJenkinsAPI import get_jobs_data
+from app.models import TestControl, TestChart1, TestChart2, Money, ChartByModel, ChartBySql, Jenkins
 from app.views import tesControlview, testchart1view, testchart2view, testchartByModelView, testchartBySqlView
 
+@admin.register(Jenkins)
+class JenkinsAdmin(admin.ModelAdmin):
+    list_display = ('name','image_data','inQueue','duration','updateddate','link_job','exec_job')
+    list_per_page = 50
+    readonly_fields = ('image_data',)
 
+    def image_data(self,obj):
+        imageurl="http://192.168.31.85:9001/static/078ab248/images/48x48/red.png"
+        if obj.color=="blue_anime":
+            imageurl="http://192.168.31.85:9001/static/078ab248/images/48x48/blue_anime.gif"
+        elif obj.color=="blue":
+            imageurl="http://192.168.31.85:9001/static/078ab248/images/48x48/blue.png"
+        else:
+            imageurl="http://192.168.31.85:9001/static/078ab248/images/48x48/red.png"
+        return mark_safe(u'<img src="%s" style="width: 32px; height: 32px;" />' % imageurl)
+    # 页面显示的字段名称
+    image_data.short_description = u'执行状态'
+
+
+    #屏蔽增加按钮
+    def has_add_permission(self, request):
+        return False
+
+    #屏蔽删除按钮
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    # 屏蔽编辑
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    # 重写changelist_view，不选中选项使用Action
+    def changelist_view(self, request, extra_context=None):
+        if 'action' in request.POST and request.POST.get('action') == 'refresh':
+            if not request.POST.getlist(ACTION_CHECKBOX_NAME):
+                post = request.POST.copy()
+                for u in Jenkins.objects.all():
+                    post.update({ACTION_CHECKBOX_NAME: str(u.id)})
+                request._set_post(post)
+        return super(JenkinsAdmin, self).changelist_view(request, extra_context)
+
+    # 增加自定义按钮
+    actions = ['refresh']
+
+    def refresh(self, request, queryset):
+        # get jenkins data
+        job_list = get_jobs_data()
+        Jenkins.objects.all().delete()
+        for job in job_list:
+            Jenkins.objects.create(
+                name=job['name'],
+                joburl=job['joburl'],
+                color=job['color'],
+                inQueue=job['inQueue'],
+                number=job['number'],
+                result=job['result'],
+                buildurl=job['buildurl'],
+                building=job['building'],
+                duration=job['duration'],
+                estimatedDuration=job['estimatedDuration'],
+                createddate= datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                updateddate= datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            )
+        # messages.add_message(request, messages.SUCCESS, '更新状态成功')
+    refresh.short_description = '刷新Jenkins'
+    refresh.icon = 'el-icon-s-promotion'
+    # refresh.type ="success"
+    refresh.acts_on_all = True
 
 # @admin.register(Money)
 class MoneyAdmin(ImportExportActionModelAdmin):

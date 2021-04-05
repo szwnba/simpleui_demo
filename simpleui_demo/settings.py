@@ -87,8 +87,8 @@ DATABASES = {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'django',    #你的数据库名称
             'USER': 'django',   #你的数据库用户名
-            'PASSWORD': '123456', #你的数据库密码
-            'HOST': '8.129.115.xx', #你的数据库主机，留空默认为localhost
+            'PASSWORD': '982128', #你的数据库密码
+            'HOST': '8.129.115.98', #你的数据库主机，留空默认为localhost
             # 'HOST': '192.168.31.85',  # 你的数据库主机，留空默认为localhost
             'PORT': 3306, # 端口
      }
@@ -133,6 +133,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+# 设置上传目录
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+# ]
 
 # 指定simpleui默认的主题,指定一个文件名，相对路径就从simpleui的theme目录读取
 # SIMPLEUI_DEFAULT_THEME = 'admin.lte.css'
